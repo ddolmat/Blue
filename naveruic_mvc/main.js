@@ -20,6 +20,7 @@ function init(){
 
 	var newsSection = Object.create(sectionObj);
 	var newsData = Object.create(dataObj);
+	newsData.subscribe = ["sbs","mbc","kbs1","kbs2"];
 
 	util.sendAjax(INFO.dataURL, function(){
 		var data = JSON.parse(this.responseText);
@@ -93,7 +94,9 @@ var util = {
 	},
 	//Date()를 이용해 현재시간을 가져와 ms단위로 환산해서 반환
 	getMsFromTime:function(){
-
+		var nowDate = new Date();
+		var result = ((nowDate.getHours()*60+nowDate.getMinutes())*60+nowDate.getSeconds())*1000;
+		return result;
 	},
 	//Ajax통신완료후 일정시간이 경과 했는지 체크해서 T/F 반환
 	checkInterval:function(){
@@ -120,5 +123,6 @@ var dataObj = {
 	total:0,
 	ajaxDoneMs:0,
 	tempData:[],
+	subscribe:[]
 }
 
