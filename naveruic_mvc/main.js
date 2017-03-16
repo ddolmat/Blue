@@ -103,8 +103,9 @@ var util = {
 
 	},
 	//입력값:노드1,노드2,클래스 | 노드1의 클래스를 삭제하고 노드2에 추가
-	swapClass(){
-
+	swapClass(node1, node2, targetClass){
+		node1.classList.remove(targetClass);
+		node2.classList.add(targetClass);
 	}
 };
 
