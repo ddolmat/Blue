@@ -1,156 +1,88 @@
 document.addEventListener("DOMContentLoaded", function(){
 	init();
-});
+}
 
 function init(){
-	var except = [];
-	var pages = {cur:0, total:0};
-	var FLAG = false;
-	var tags = ["LI", "BUTTON", "DIV", "A"];
-	var tempData = "";
-	var checkMs = 0;
-	var wrap = document.querySelector(".wrap");
-	var template = document.querySelector("#newsTemplate").innerHTML;
-	var contentSec = document.querySelector("section.content");
-	var nav = document.querySelector("nav");
-	var dataUrl = "./data/newslist.json";
 
-	var btn = document.querySelector(".btn");
+});	
 
-	sendAjax(dataUrl, function(){
-		var data = JSON.parse(this.responseText);
-		var tempStr = "";
-		for(var i = 0; i < data.length; i++){
-			tempStr += "<li class='navList'>"+data[i]["title"]+"</li>";
-		}
-		nav.innerHTML = tempStr;
-		insertHTML(contentSec, data[0], template);
-		pages.total = data.length;
-		pages.cur = 1;
-		insertCurPage(1, data.length);
-	});
+var headerObj = {
+	//돔컨텐트가 로드되면 작동 
+	contendLoad:function(){
 
-	wrap.addEventListener("click", function(evt){
-		console.log(evt.target.tagName);
-		FLAG = true;
-		if(!checkTagName(evt.target.tagName, tags)){
-			return;
-		}else if(/navList/.test(evt.target.className)){
-			var nowMs = getTime();
-			var diff = nowMs - checkMs;
-			if(diff > 12000 || diff <= 0 && FLAG === false){
-			checkMs = nowMs;	
-				sendAjax(dataUrl, function(){
-					var data = JSON.parse(this.responseText);
-					tempData = data;
-					changeSection(evt.target.innerText, tempData, contentSec, template, pages);
-					FLAG = false;
-				});
-			}else{
-					changeSection(evt.target.innerText, tempData, contentSec, template, pages);
-			}
-		}else if(evt.target.tagName === "A"){
-			if(/left/.test(evt.target.parentNode.className)){
-				var total = pages.total;
-				if(pages.cur === 1) pages.cur = pages.total;
-				else pages.cur -= 1;
-				var nowMs = getTime();
-				var diff = nowMs - checkMs;
-				if(diff > 12000 || diff <= 0 && FLAG === false){
-					checkMs = nowMs;	
-					sendAjax(dataUrl, function(){
-						var data = JSON.parse(this.responseText);
-						tempData = data;
-						changeSection(tempData[pages.cur-1]["title"], tempData, contentSec, template, pages);
-						FLAG = false;
-					});
-				}else changeSection(tempData[pages.cur-1]["title"], tempData, contentSec, template, pages); 
-			}else if(/right/.test(evt.target.parentNode.className)){
-				if(pages.cur === pages.total) pages.cur = 1;
-				else pages.cur += 1;
-				var nowMs = getTime();
-				var diff = nowMs - checkMs;
-				if(diff > 12000 || diff <= 0 && FLAG === false){
-					checkMs = nowMs;	
-					sendAjax(dataUrl, function(){
-						var data = JSON.parse(this.responseText);
-						tempData = data;
-						changeSection(tempData[pages.cur-1]["title"], tempData, contentSec, template, pages);
-						FLAG = false;
-					});
-				}else changeSection(tempData[pages.cur-1]["title"], tempData, contentSec, template, pages);
-			}/*else if(/delBtn/.test(evt.target.parentNode.className)){
-				var nowMs = getTime();
-				var diff = nowMs - checkMs;
-				if(diff > 12000 || diff <= 0 && FLAG === false){
-					checkMs = nowMs;	
-					sendAjax(dataUrl, function(){
-						nav.removeChild(nav.children[pages.cur - 1]);
-						changeSection(tempData[pages.cur]["title"], tempData, contentSec, template);
-						pages.total -= 1;
-						insertCurPage(pages.cur, pages.total);
-						FLAG = false;
-					});
-				} else {
-					nav.removeChild(nav.children[pages.cur - 1]);
-					pages.total -= 1;
-					changeSection(tempData[pages.cur - 1]["title"], tempData, contentSec, template);
+	},
+	// < > 버튼 클릭시 작동하는 함수 
+	clickPrevOrNext:function(){
 
-				}
-			}*/
-		}
-	});
+	},
+	// 현재페이지/전체페이지 수를 표시
+	viewCurTotal:function(){
 
-
-}
-
-function sendAjax(url, func){
-	var oReq = new XMLHttpRequest();
-	oReq.addEventListener("load", func);
-	oReq.open("GET", url);
-	oReq.send();
-}
-
-function changeSection(text, data, node, template, pages){
-	for(var i = 0; i < data.length; i++){
-		if(text === data[i]["title"]){
-			insertHTML(node, data[i], template);
-			pages.cur = i+1;
-			insertCurPage(pages.cur, pages.total);
-			return;
-		}
 	}
-}
-function insertCurPage(cur, total){
-	cur = cur.toString();
-	total = total.toString();
-	var cPage = document.querySelector(".c_paging");
-	var template2 = document.querySelector("#curTemplate").innerHTML;
-	var str = template2.replace(/{cur}/, cur);
-	str = str.replace(/{total}/, total);
-	cPage.innerHTML = str;
-}
-function insertHTML(node,data,template){
-	var str = template.replace(/{title}/, data["title"]);
-	str = str.replace(/{imgurl}/, data["imgurl"]);
-	var newsList = "";
-	for(var i = 0; i < data["newslist"].length; i++){
-		newsList += "<li>"+data["newslist"][i]+"</li>";
+};
+
+var navObj = {
+	//돔컨텐트가 로드되면 작동
+	contendLoad:function(){
+
+	},
+	//nav하위의 li를 클릭하면 작동하는 함수
+	clickTitle:function(){
+
+	},
+	//선택된 li 하이라이트
+	changeSelected:function(){
+
 	}
-	str = str.replace(/{newsList}/, newsList);
-	node.innerHTML = str;
+};
+
+var sectionObj = {
+	//돔컨텐트가 로드되면 작동
+	contendLoad:function(){
+
+	},
+	//해지버튼을 눌렀을때 작동하는 함수
+	clickUnSub:function(){
+
+	},
+	//입력값: json을 파싱한 data, 템플릿 | 템플릿에 파싱한 데이터를 대치해서 section에 뿌려줌
+	changeContent:function(){
+
+	}
+};
+
+var util = {
+	//입력값: url, 콜백함수
+	sendAjax:function(){
+
+	},
+	//Date()를 이용해 현재시간을 가져와 ms단위로 환산해서 반환
+	getMsFromTime:function(){
+
+	},
+	//Ajax통신완료후 일정시간이 경과 했는지 체크해서 T/F 반환
+	checkInterval:function(){
+
+	},
+	//querySelector를 줄여쓰기 위함
+	$:function(){
+
+	},
+	//입력값:태그네임, 허용된태그네임배열 | 출력값:허용된 태그네임배열에 태그네임이 있을경우:true/없을경우:false 
+	chekckTagName(){
+
+	},
+	//입력값:노드1,노드2,클래스 | 노드1의 클래스를 삭제하고 노드2에 추가
+	swapClass(){
+
+	}
+};
+
+var dataObj = {
+	FLAG:false,
+	cur:0,
+	total:0,
+	ajaxDoneMs:0,
+	tempData:[],
 }
 
-function getTime(){
-	var result = 0;
-	var nowDate = new Date();
-	result = ((nowDate.getHours()*60+nowDate.getMinutes())*60+nowDate.getSeconds())*1000;
-	return result;
-}
-
-function checkTagName(tagName, allowTags){
-	for(var i = 0; i < allowTags.length; i++){
-		if(tagName === allowTags[i]) return true;
-	}
-	return false;
-}
