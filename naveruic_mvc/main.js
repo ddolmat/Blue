@@ -20,6 +20,7 @@ function init(){
 
 	var newsSection = Object.create(sectionObj);
 	var newsData = Object.create(dataObj);
+
 	util.sendAjax(INFO.dataURL, function(){
 		var data = JSON.parse(this.responseText);
 		newsData.tempData = data;
@@ -50,8 +51,12 @@ var headerObj = {
 
 var navObj = {
 	//돔컨텐트가 로드되면 작동
-	contendLoad:function(){
-
+	contendLoad:function(data){
+		let tempHTML = "";
+		data.forEach(function(v){
+			tempHTML += this.template.replace(/{title}/, v.title);
+		});
+		this.navList.innerHTML = tempHTML;
 	},
 	//nav하위의 li를 클릭하면 작동하는 함수
 	clickTitle:function(){
@@ -99,7 +104,7 @@ var util = {
 		return document.querySelector(query);
 	},
 	//입력값:태그네임, 허용된태그네임배열 | 출력값:허용된 태그네임배열에 태그네임이 있을경우:true/없을경우:false 
-	chekckTagName(){
+	checkTagName(){
 
 	},
 	//입력값:노드1,노드2,클래스 | 노드1의 클래스를 삭제하고 노드2에 추가
