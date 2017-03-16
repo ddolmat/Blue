@@ -3,21 +3,48 @@ document.addEventListener("DOMContentLoaded", function(){
 }
 
 function init(){
+	const INFO = {
+		dataURL:"./data/newslist.json",
+		timer:10000
+	};
 
+	var newsHeader = Object.create(headerObj);
+	newsHeader.btns = util.$(".btns");
+	newsHeader.template = util.$(".curTemplate").innerHTML;
+	newsHeader.cPage = util.$(".c_paging");
+	newsHeader.template = util.$("#curTemplate");
+
+	var newsNav = Object.create(navObj);
+	newsNav.navList = util.$("nav > ul");
+	newsNav.template = util.$(".#navTemplate");
+
+	var newsSection = Object.create(sectionObj);
+	var newsData = Object.create(dataObj);
+	util.sendAjax(INFO.dataURL, function(){
+		var data = JSON.parse(this.responseText);
+		newsData.tempData = data;
+	});
+
+	newsHeader.contendLoad(newsData.cur, newsData.total);
+	newsNav.contendLoad();
+	newsSection.contendLoad();
 });	
 
 var headerObj = {
 	//돔컨텐트가 로드되면 작동 
-	contendLoad:function(){
-
+	contendLoad:function(cur, total){
+		this.viewCurTotal(cur, total);
 	},
 	// < > 버튼 클릭시 작동하는 함수 
 	clickPrevOrNext:function(){
 
 	},
 	// 현재페이지/전체페이지 수를 표시
-	viewCurTotal:function(){
-
+	viewCurTotal:function(cur, total){
+		cur = cur.toString();
+		total = total.toString();
+		let tempHTML = this.template.replace(/{cur}/, cur);
+		tempHTML = tempHTML.replace(/{total}/, total);	
 	}
 };
 
@@ -53,8 +80,11 @@ var sectionObj = {
 
 var util = {
 	//입력값: url, 콜백함수
-	sendAjax:function(){
-
+	sendAjax:function(url, func){
+		let oReq = new XMLHttpRequest();
+		oReq.addEventListener("load", func);
+		oReq.open("GET", url);
+		oReq.send();
 	},
 	//Date()를 이용해 현재시간을 가져와 ms단위로 환산해서 반환
 	getMsFromTime:function(){
@@ -65,8 +95,8 @@ var util = {
 
 	},
 	//querySelector를 줄여쓰기 위함
-	$:function(){
-
+	$:function(query){
+		return document.querySelector(query);
 	},
 	//입력값:태그네임, 허용된태그네임배열 | 출력값:허용된 태그네임배열에 태그네임이 있을경우:true/없을경우:false 
 	chekckTagName(){
