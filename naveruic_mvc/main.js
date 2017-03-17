@@ -9,7 +9,7 @@ function init(){
 	};
 
 	var newsHeader = Object.create(headerObj);
-	newsHeader.btns = util.$(".btns");
+	newsHeader.btns = util.$(".btn");
 	newsHeader.template = util.$("#curTemplate").innerHTML;
 	newsHeader.cPage = util.$(".c_paging");
 
@@ -49,7 +49,7 @@ var headerObj = {
 				direction = "next";
 			}
 			this.clickPrevOrNext(direction);
-		}).bind(this);
+		}.bind(this));
 	},
 	// < > 버튼 클릭시 작동하는 함수 
 	clickPrevOrNext:function(direction){
@@ -111,7 +111,6 @@ var util = {
 		}else return;
 	},
 	sendAjax:function(url, func){
-		this.checkInterval(info.timer)
 		var oReq = new XMLHttpRequest();
 		oReq.addEventListener("load", func);
 		oReq.open("GET", url);
