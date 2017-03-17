@@ -16,11 +16,11 @@ class ToDoList {
 
 	showAll(){
 		console.log("ToDoList");
-			this.taskList.forEach(function(v){
-		console.log(v);
+		this.taskList.forEach(function(v){
+			console.log(v);
 		});
 		console.log("CompleteList");
-			this.completeList.forEach(function(v){
+		this.completeList.forEach(function(v){
 			console.log(v);
 		});	
 	}
