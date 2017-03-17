@@ -94,8 +94,14 @@ nav {
 }
 
 .newsList ul li {
-	  text-overflow: ellipsis;
+	 text-overflow: ellipsis;
     white-space: nowrap;
     font-size: 12px;
+}
+
+.selected {
+	background-color: #cccaca;
+	font-weight: bold;
+	color: white;
 }
 
