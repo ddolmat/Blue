@@ -40,7 +40,7 @@ var headerObj = {
 	contendLoad:function(cur, total){
 		this.viewCurTotal(cur, total);
 		this.btns.addEventListener("click",function(evt){
-			var target = evt.taret;
+			var target = evt.target;
 			var direction = "";
 			if(target.tagName !== "A") return;
 			else if(target.parentNode.classList.contains("left")){
