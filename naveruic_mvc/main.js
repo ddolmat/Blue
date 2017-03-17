@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(){
 	init();
-}
+});
 
 function init(){
 	const INFO = {
@@ -10,54 +10,70 @@ function init(){
 
 	var newsHeader = Object.create(headerObj);
 	newsHeader.btns = util.$(".btns");
-	newsHeader.template = util.$(".curTemplate").innerHTML;
+	newsHeader.template = util.$("#curTemplate").innerHTML;
 	newsHeader.cPage = util.$(".c_paging");
-	newsHeader.template = util.$("#curTemplate");
 
 	var newsNav = Object.create(navObj);
 	newsNav.navList = util.$("nav > ul");
-	newsNav.template = util.$(".#navTemplate");
+	newsNav.template = util.$("#navTemplate").innerHTML;
 
 	var newsSection = Object.create(sectionObj);
+	newsSection.content = util.$("section.content");
+
 	var newsData = Object.create(dataObj);
 	newsData.subscribe = ["sbs","mbc","kbs1","kbs2"];
 
 	util.sendAjax(INFO.dataURL, function(){
 		var data = JSON.parse(this.responseText);
 		newsData.tempData = data;
+		newsData.cur = 1;
+		newsData.total = data.length;
+		newsHeader.contendLoad(newsData.cur, newsData.total);
+		newsNav.contendLoad(newsData.tempData);
+		newsSection.contendLoad();
 	});
 
-	newsHeader.contendLoad(newsData.cur, newsData.total);
-	newsNav.contendLoad();
-	newsSection.contendLoad();
-});	
+}
 
 var headerObj = {
 	//돔컨텐트가 로드되면 작동 
 	contendLoad:function(cur, total){
 		this.viewCurTotal(cur, total);
+		this.btns.addEventListener("click",function(evt){
+			var target = evt.taret;
+			var direction = "";
+			if(target.tagName !== "A") return;
+			else if(target.parentNode.classList.contains("left")){
+				direction = "prev";
+			}else if(target.parentNode.classList.contains("right")){
+				direction = "next";
+			}
+			this.clickPrevOrNext(direction);
+		}).bind(this);
 	},
 	// < > 버튼 클릭시 작동하는 함수 
-	clickPrevOrNext:function(){
+	clickPrevOrNext:function(direction){
 
 	},
 	// 현재페이지/전체페이지 수를 표시
 	viewCurTotal:function(cur, total){
 		cur = cur.toString();
 		total = total.toString();
-		let tempHTML = this.template.replace(/{cur}/, cur);
-		tempHTML = tempHTML.replace(/{total}/, total);	
+		var tempHTML = this.template.replace(/{cur}/, cur);
+		tempHTML = tempHTML.replace(/{total}/, total);
+		this.cPage.innerHTML = tempHTML;	
 	}
 };
 
 var navObj = {
 	//돔컨텐트가 로드되면 작동
 	contendLoad:function(data){
-		let tempHTML = "";
+		var tempHTML = "";
 		data.forEach(function(v){
 			tempHTML += this.template.replace(/{title}/, v.title);
-		});
+		}.bind(this));
 		this.navList.innerHTML = tempHTML;
+		this.navList.children[0].classList.add("selected");
 	},
 	//nav하위의 li를 클릭하면 작동하는 함수
 	clickTitle:function(){
@@ -71,7 +87,7 @@ var navObj = {
 
 var sectionObj = {
 	//돔컨텐트가 로드되면 작동
-	contendLoad:function(){
+	contendLoad:function(data){
 
 	},
 	//해지버튼을 눌렀을때 작동하는 함수
@@ -86,8 +102,17 @@ var sectionObj = {
 
 var util = {
 	//입력값: url, 콜백함수
+	sendIntervalAjax:function(ajaxDoneMs, timer, url, func){
+		var nowMs = this.getMsFromTime();
+		var diff = nowMs - ajaxDoneMs;
+		if(diff > timer || diff <= 0){
+			ajaxDoneMs = nowMs;
+			this.sendAjax(url, func);
+		}else return;
+	},
 	sendAjax:function(url, func){
-		let oReq = new XMLHttpRequest();
+		this.checkInterval(info.timer)
+		var oReq = new XMLHttpRequest();
 		oReq.addEventListener("load", func);
 		oReq.open("GET", url);
 		oReq.send();
@@ -99,7 +124,7 @@ var util = {
 		return result;
 	},
 	//Ajax통신완료후 일정시간이 경과 했는지 체크해서 T/F 반환
-	checkInterval:function(){
+	checkInterval:function(ajaxDoneMs, timer){
 
 	},
 	//querySelector를 줄여쓰기 위함
@@ -124,5 +149,5 @@ var dataObj = {
 	ajaxDoneMs:0,
 	tempData:[],
 	subscribe:[]
-}
+};
 
