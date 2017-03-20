@@ -24,10 +24,10 @@ function init(){
 			case "navVT": newsNav.viewTitles(arguments[1]);
 			break;
 			case "conLoad":
-				newsData.getData(newsData.tempData);
-				newsHeader.contendLoad(newsData);
-				newsNav.contendLoad(newsData);
-				newsSection.contendLoad(newsData.cur, newsData.tempData);
+				newsData.getData(arguments[1].tempData);
+				newsHeader.contendLoad(arguments[1]);
+				newsNav.contendLoad(arguments[1]);
+				newsSection.contendLoad(arguments[1].cur, arguments[1].tempData);
 			break;
 		}
 	};
