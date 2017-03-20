@@ -196,7 +196,8 @@ var navObj = {
 				break;
 			}
 		}
-		titleList[i].classList.remove("selected");
+		//아래의 idx값 대신에 i를 넣어도 동일하게 작동함 closure때문
+		titleList[idx].classList.remove("selected");
 		titleList[dataObj.cur-1].classList.add("selected");
 	}
 };
