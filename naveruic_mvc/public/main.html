@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>news</title>
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+
+    <div class="wrap">
+    	<header>
+    		<ul>
+    			<li class="allNews"><a>전체언론사</a></li>
+    			<li class="myNews selectedTab"><a>my뉴스</a></li>
+    		</ul>
+            
+    		<div class="btn">
+    			<div class="left"><a href="#"><</a></div>
+    			<div class="right"><a href="#">></a></div>
+    		</div>
+
+            <div class="c_paging">
+
+            </div>
+    	</header>
+    	<section class="mainArea">
+    		<nav>
+    			<ul>
+    			</ul>
+    		</nav>
+    		<section class="content">
+    		</section>
+    	</section>
+        <section class="subscribe displayOff">
+        </section>
+    </div>
+
+
+    <script src="main1.js"></script>
+
+	<script type="template" id="newsTemplate">
+		<h4 class="title">
+			<span class="newsName">{title}</span><button class="delBtn"><a href="#">X</a></button>
+		</h4>
+		<div class="newsList">
+			<img src={imgurl} alt="">
+			<ul>
+				{newsList}
+			</ul>
+		</div>
+	</script>
+    <script type="template" id="curTemplate">
+        <b class="current">{cur}</b>/<b class="total">{total}</b>
+    </script>
+    <script type="template" id="navTemplate">
+        <li class="navList">{title}</li>
+    </script>  
+    </body>
+</html>
