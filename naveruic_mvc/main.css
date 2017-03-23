@@ -9,11 +9,12 @@ header,.mainArea > nav, .mainArea > .content, .newsList > ul{
 }
 
 .wrap{
+	position: relative;
 	width:800px;
 	margin: 150px auto 0px;
 }
 
-.wrap,nav,.content {
+.wrap,nav,.content,.subscribe {
 	height: 200px;
 }
 
@@ -53,6 +54,7 @@ header > .btn {
 }
 
 .mainArea {
+	position: absolute;
 	clear:both;
 	overflow: auto;
 }
@@ -105,3 +107,39 @@ nav {
 	color: white;
 }
 
+.displayOff {
+	top:243px;
+	1display: none;
+	background-color: #abcce6;
+}
+
+.subscribe {
+	padding: 10px;
+	box-sizing: border-box;
+	width:800px;
+	position:absolute;
+	border: 1px solid #cccaca;	
+}
+.onSub {
+
+	color: white;
+	background-color: black;
+}
+.subBtn{
+	float:left;
+	text-align: center;
+	fott-weight: bold;
+	line-height: 10%;
+	font-size: 1em;
+	height:40px;
+	width:60px;
+	box-sizing: border-box;
+	padding: 15px;
+}
+.selectedTab a{
+	font-weight: bold;
+	color:black;
+}
+header ul li a{
+	color: grey;
+}
