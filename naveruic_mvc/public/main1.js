@@ -1,15 +1,25 @@
+
 var ns = {};
 
 ns.util = {
-	sendAjax: function(url, func){
+	sendAjax: function(url, msg, func){
 		var oReq = new XMLHttpRequest();
-
+		oReq.open(msg, url);
+		oReq.setRequestHeader("Content-type", "application/json");
+		oReq.send();
 		oReq.addEventListener("load", function(){
 			var jsonObj = JSON.parse(oReq.responseText);
 			func(jsonObj);
 		});
+	},
+	_sendAjax: function(url, func){
+		var oReq = new XMLHttpRequest();
 		oReq.open("GET", url);
 		oReq.send();
+		oReq.addEventListener("load", function(){
+			var jsonObj = JSON.parse(oReq.responseText);
+			func(jsonObj);
+		});
 	},
 	$:function(selector){
 		return document.querySelector(selector);
@@ -316,7 +326,7 @@ ns.controller = {
 };
 
 document.addEventListener("DOMContentLoaded", function(){
-	ns.util.sendAjax("./data/newslist.json", function(result){
+	ns.util.sendAjax("/ajax/","POST", function(result){
 		ns.dispatcher.emit({
 			"type": "initView"
 		}, [result]);

@@ -28,7 +28,8 @@ router.post('/', function(req, res){
 				var temp = {
 					title : v.title,
 					imgurl : v.imgurl,
-					newslist : JSON.parse(v.newslist)
+					newslist : JSON.parse(v.newslist),
+					subsOn: v.subsOn
 				};
 				responseData.push(temp);
 				console.log(temp);
