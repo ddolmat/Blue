@@ -2,15 +2,25 @@
 var ns = {};
 
 ns.util = {
-	sendAjax: function(url, msg, func){
+	sendAjax: function(url, method, data, func){
 		var oReq = new XMLHttpRequest();
-		oReq.open(msg, url);
-		oReq.setRequestHeader("Content-type", "application/json");
-		oReq.send();
+		oReq.open(method, url);
+
+		if(data){
+			data = JSON.stringify(data);
+			console.log(data);
+			oReq.setRequestHeader("Content-type", "application/json");	
+		}else{
+			data = null;
+		}
+
+		oReq.send(data);
+
 		oReq.addEventListener("load", function(){
 			var jsonObj = JSON.parse(oReq.responseText);
 			func(jsonObj);
 		});
+		
 	},
 	_sendAjax: function(url, func){
 		var oReq = new XMLHttpRequest();
@@ -64,6 +74,23 @@ ns.model = {
 			"type": "changeView"
 		},[idx, this.subsOnData]);
 	},
+	_setSubsOnData: function(data){
+		var tempData = [];
+		data.forEach(function(v){
+			if(v.subsOn === 1) tempData.push(v);
+		});
+		if(tempData.length === 0){
+			ns.dispatcher.emit({
+				"type":"eraseAll"
+			},[]);
+		}else{
+			this.subsOnData = tempData;
+			this.total = tempData.length;
+			ns.dispatcher.emit({
+				"type":"changeView"
+			},[this.currIdx, tempData]);
+		}
+	},
 	setSubsOnData: function(data) {
 		if(this.subscribe.length === 0){
 			ns.dispatcher.emit({
@@ -87,6 +114,12 @@ ns.model = {
 		if(this.currIdx === this.total - 1) this.currIdx = 0;
 		this.setSubsOnData(this.allData);
 	},
+	_removeSubsList: function(title){
+		ns.dispatcher.emit({
+			"type":"subsOnToggle"
+		}),[title, 0];
+		//this.setSubsOnData(this.allData);
+	},
 	removeSubsList: function(title) {
 		var idx = this.subscribe.indexOf(title);
 		this.subscribe.splice(idx, 1);
@@ -105,6 +138,12 @@ ns.model = {
 			btn.classList.add("onSub");
 			this.addSubsList(btn.innerText);
 		}
+	},
+	_addSubsList: function(title){
+		ns.dispatcher.emit({
+			"type":"subsOnToggle"
+		},[title, 1]);
+		//this.setSubsOnData(this.allData);
 	},
 	addSubsList: function(title) {
 		this.subscribe.push(title);
@@ -218,17 +257,23 @@ ns.view.subscribe = {
 		this.resistEvent();
 	},
 	render:function(allData, subsList){
-		var subsList = subsList.join(" ");
 		var tempHTML = allData.reduce(function(prev, next){
 			return prev + "<button class='subBtn'>" + next.title + "</button>";
 		}, "");
 		var subsBtns = this.subscribe.children;
 		this.subscribe.innerHTML = tempHTML;
+		/*
+		allData.forEach(function(v,i){
+			if(v.subsOn === 1) subsBtns[i].classList.add("onSub");
+		});
+		*/
+		var subsList =  subsList.join(" ");
 		for(var i = 0; i < subsBtns.length; i ++){
 			if(subsList.includes(subsBtns[i].innerText)){
 				subsBtns[i].classList.add("onSub");
 			}
 		}
+		
 	},
 	resistEvent:function(){
 		this.subscribe.addEventListener("click", function(evt){
@@ -306,6 +351,13 @@ ns.controller = {
 				this.nav.eraseUl();
 				this.section.eraseContent();
 				this.subscribe.render(this.model.allData, this.model.subscribe);
+			}.bind(this),
+			"subsOnToggle":function(title, flag){
+				ns.util.sendAjax("/ajax/","POST",{title:title, flag:flag},function(result){
+					ns.dispatcher.emit({
+						"type":"initView"
+					},[result]);
+				});
 			}.bind(this)
 		});	
 	},
@@ -326,7 +378,7 @@ ns.controller = {
 };
 
 document.addEventListener("DOMContentLoaded", function(){
-	ns.util.sendAjax("/ajax/","POST", function(result){
+	ns.util.sendAjax("/ajax/","GET", null, function(result){
 		ns.dispatcher.emit({
 			"type": "initView"
 		}, [result]);

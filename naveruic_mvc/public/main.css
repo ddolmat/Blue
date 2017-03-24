@@ -64,7 +64,7 @@ nav, .content , .newsList > ul{
 	box-sizing: border-box;
 }
 
-nav {
+.wrap .mainArea nav {
 	width:200px;
 	border-right: 0;
 }
@@ -110,7 +110,7 @@ nav {
 .displayOff {
 	top:243px;
 	1display: none;
-	background-color: #abcce6;
+	opacity: 0.4;
 }
 
 .subscribe {
