@@ -1,20 +1,11 @@
 const NavList = (props) => {
     let navHTML = props.post.map((v,i) => {
-            if(i !== props.currIdx) {
-                return (
-                    <li key={i} onClick={props.onClick.bind(null, i)}>
-                        {v.title}
-                    </li>
-                )
-            } else {
-                return (
-                    <li key={i} onClick={props.onClick.bind(null, i)} className="selected">
-                        {v.title}
-                    </li>
-                )
-            }
-        }
-    );
+      return (
+        (i !== props.currIdx) ? 
+          <li key={i} onClick={props.onClick.bind(null, i)}>{v.title}</li> :
+          <li key={i} onClick={props.onClick.bind(null, i)} className="selected">{v.title}</li>
+      )
+    });
     
     return (
         <ul className="navUl">
@@ -67,14 +58,14 @@ class TabUI extends React.Component {
         );  
        return (
        <div>     
-       <nav>
+       <nav className="nav">
             <NavList
                 onClick={this.changeCurr.bind(this)}
                 post={data}
                 currIdx={idx}
             />
        </nav>
-       <article>
+       <article className="content">
             {viewHTML}
        </article>
        </div>
