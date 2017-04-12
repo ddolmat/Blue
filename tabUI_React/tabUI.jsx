@@ -1,9 +1,8 @@
 const NavList = (props) => {
     let navHTML = props.post.map((v,i) => {
+      let clsName = (i !== props.currIdx) ? "" : "selected";
       return (
-        (i !== props.currIdx) ? 
-          <li key={i} onClick={props.onClick.bind(null, i)}>{v.title}</li> :
-          <li key={i} onClick={props.onClick.bind(null, i)} className="selected">{v.title}</li>
+          <li key={v.title} onClick={props.onClick.bind(null, i)} className={clsName}>{v.title}</li>
       )
     });
     
