@@ -51,7 +51,7 @@ class TabUI extends React.Component {
     }
 
     componentDidMount() {
-        sendAjax('GET', 'http://127.0.0.1:8000/data.json', () => {
+        sendAjax('GET', 'http://127.0.0.1:8000/data.json', (req) => {
             store.dispatch({
                 type: 'GetAjax',
                 post: JSON.parse(req.responseData)
