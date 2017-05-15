@@ -6,11 +6,11 @@ var mysql = require('mysql');
 
 //DATABASE SETTING
 var connection = mysql.createConnection({
-	host: '192.168.56.101',
+	host: ,
 	port: 3306,
-	user: 'test',
-	password: 'pw1234',
-	database: 'ddolmatdb' 
+	user: ,
+	password: ,
+	database: 
 });
 
 connection.connect();
