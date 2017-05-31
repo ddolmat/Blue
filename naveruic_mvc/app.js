@@ -23,8 +23,5 @@ app.get('/', function(req,res){
 	res.sendFile(__dirname + "/public/main.html");
 });
 
-app.get('/data', function(req,res){
-	res.sendFile(__dirname + "/data/newslist.json");
-});
 
 

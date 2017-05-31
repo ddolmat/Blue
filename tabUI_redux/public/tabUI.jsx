@@ -9,9 +9,9 @@ const sendAjax = (method, url, func) => {
 const reducer = (state = {post:[],currIdx:0}, action) => {
     switch(action.type) {
         case 'ChangeCurr':
-            return Object.asign(state, {currIdx: action.idx});
+            return Object.assign({}, state, {currIdx: action.idx});
         case 'GetAjax':
-            return Object.asign(state, {post: action.post});
+            return Object.assign({}, state, {post: action.post});
         default :
             return state;
     }
@@ -51,7 +51,7 @@ class TabUI extends React.Component {
     }
 
     componentDidMount() {
-        sendAjax('GET', 'http://127.0.0.1:8000/data.json', () => {
+        sendAjax('GET', 'http://127.0.0.1:8000/data.json', (req) => {
             store.dispatch({
                 type: 'GetAjax',
                 post: JSON.parse(req.responseData)
@@ -92,13 +92,6 @@ const render = () => {
         <TabUI data={store.getState()}/>, document.querySelector("#wrap")
     );
 }
-
-sendAjax('GET', 'http://127.0.0.1:8000/data.json', () => {
-    store.dispatch({
-        type: 'GetAjax',
-        post: JSON.parse(req.responseData)
-    });
-}); 
 
 store.subscribe(render);
 
